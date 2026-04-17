@@ -1,0 +1,77 @@
+import java.io.*;
+import java.util.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.toList;
+
+class Result {
+
+    public static void matrixRotation(List<List<Integer>> matrix, int r) {
+        int m = matrix.size();
+        int n = matrix.get(0).size();
+
+        int layers = Math.min(m, n) / 2;
+
+        for (int layer = 0; layer < layers; layer++) {
+            List<Integer> list = new ArrayList<>();
+
+            int top = layer;
+            int left = layer;
+            int bottom = m - layer - 1;
+            int right = n - layer - 1;
+
+            // extract
+            for (int i = left; i <= right; i++) list.add(matrix.get(top).get(i));
+            for (int i = top + 1; i < bottom; i++) list.add(matrix.get(i).get(right));
+            for (int i = right; i >= left; i--) list.add(matrix.get(bottom).get(i));
+            for (int i = bottom - 1; i > top; i--) list.add(matrix.get(i).get(left));
+
+            int len = list.size();
+            int rot = r % len;
+
+            // rotate
+            List<Integer> rotated = new ArrayList<>();
+            rotated.addAll(list.subList(rot, len));
+            rotated.addAll(list.subList(0, rot));
+
+            int idx = 0;
+
+            // fill back
+            for (int i = left; i <= right; i++) matrix.get(top).set(i, rotated.get(idx++));
+            for (int i = top + 1; i < bottom; i++) matrix.get(i).set(right, rotated.get(idx++));
+            for (int i = right; i >= left; i--) matrix.get(bottom).set(i, rotated.get(idx++));
+            for (int i = bottom - 1; i > top; i--) matrix.get(i).set(left, rotated.get(idx++));
+        }
+
+        // print result
+        for (List<Integer> row : matrix) {
+            for (int val : row) {
+                System.out.print(val + " ");
+            }
+            System.out.println();
+        }
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        String[] firstInput = bufferedReader.readLine().trim().split(" ");
+        int m = Integer.parseInt(firstInput[0]);
+        int n = Integer.parseInt(firstInput[1]);
+        int r = Integer.parseInt(firstInput[2]);
+
+        List<List<Integer>> matrix = new ArrayList<>();
+
+        for (int i = 0; i < m; i++) {
+            matrix.add(
+                Stream.of(bufferedReader.readLine().trim().split(" "))
+                      .map(Integer::parseInt)
+                      .collect(toList())
+            );
+        }
+
+        Result.matrixRotation(matrix, r);
+        bufferedReader.close();
+    }
+}
