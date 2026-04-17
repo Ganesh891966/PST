@@ -1,0 +1,26 @@
+class Solution(object):
+    def findAndReplacePattern(self, words, pattern):
+        def match(word, pattern):
+            if len(word) != len(pattern):
+                return False
+            
+            map1 = {}
+            map2 = {}
+            
+            for w, p in zip(word, pattern):
+                if w not in map1:
+                    map1[w] = p
+                if p not in map2:
+                    map2[p] = w
+                
+                if map1[w] != p or map2[p] != w:
+                    return False
+            
+            return True
+        
+        result = []
+        for word in words:
+            if match(word, pattern):
+                result.append(word)
+        
+        return result
