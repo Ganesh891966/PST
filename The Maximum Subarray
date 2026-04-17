@@ -1,0 +1,25 @@
+def maxSubarray(arr):
+    max_current = arr[0]
+    max_global = arr[0]
+    
+    for num in arr[1:]:
+        max_current = max(num, max_current + num)
+        max_global = max(max_global, max_current)
+    
+    # Maximum subsequence
+    positive_sum = sum(x for x in arr if x > 0)
+    if positive_sum > 0:
+        max_subsequence = positive_sum
+    else:
+        max_subsequence = max(arr)
+    
+    return [max_global, max_subsequence]
+
+
+if __name__ == '__main__':
+    t = int(input().strip())
+    for _ in range(t):
+        n = int(input().strip())
+        arr = list(map(int, input().split()))
+        result = maxSubarray(arr)
+        print(result[0], result[1])
