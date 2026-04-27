@@ -1,0 +1,57 @@
+import java.io.*;
+import java.util.*;
+
+class Result {
+
+    public static List<Integer> circularPalindromes(String s) {
+        int n = s.length();
+        List<Integer> res = new ArrayList<>();
+
+        String doubled = s + s;
+
+        for (int i = 0; i < n; i++) {
+            int maxLen = 1;
+
+            for (int center = i; center < i + n; center++) {
+                // odd length
+                maxLen = Math.max(maxLen, expand(doubled, center, center, i, i + n));
+
+                // even length
+                maxLen = Math.max(maxLen, expand(doubled, center, center + 1, i, i + n));
+            }
+
+            res.add(maxLen);
+        }
+
+        return res;
+    }
+
+    private static int expand(String s, int left, int right, int start, int end) {
+        while (left >= start && right < end && s.charAt(left) == s.charAt(right)) {
+            left--;
+            right++;
+        }
+        return right - left - 1;
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int n = Integer.parseInt(br.readLine().trim());
+        String s = br.readLine().trim();
+
+        List<Integer> result = Result.circularPalindromes(s);
+
+        for (int val : result) {
+            bw.write(String.valueOf(val));
+            bw.newLine();
+        }
+
+        bw.flush();
+        bw.close();
+        br.close();
+    }
+}
